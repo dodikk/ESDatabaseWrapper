@@ -1,0 +1,242 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		7E6A36C1160084F000F4CE84 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E6A36C0160084F000F4CE84 /* Foundation.framework */; };
+		7E6A36C6160084F000F4CE84 /* ESDatabaseWrapper.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7E6A36C5160084F000F4CE84 /* ESDatabaseWrapper.h */; };
+		7E6A36C8160084F000F4CE84 /* ESDatabaseWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A36C7160084F000F4CE84 /* ESDatabaseWrapper.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		7E6A36BB160084F000F4CE84 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/${PRODUCT_NAME}";
+			dstSubfolderSpec = 16;
+			files = (
+				7E6A36C6160084F000F4CE84 /* ESDatabaseWrapper.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		7E6A36BD160084F000F4CE84 /* libESDatabaseWrapper.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libESDatabaseWrapper.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		7E6A36C0160084F000F4CE84 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		7E6A36C4160084F000F4CE84 /* ESDatabaseWrapper-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ESDatabaseWrapper-Prefix.pch"; sourceTree = "<group>"; };
+		7E6A36C5160084F000F4CE84 /* ESDatabaseWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ESDatabaseWrapper.h; sourceTree = "<group>"; };
+		7E6A36C7160084F000F4CE84 /* ESDatabaseWrapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ESDatabaseWrapper.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		7E6A36BA160084F000F4CE84 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7E6A36C1160084F000F4CE84 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		7E6A36B2160084F000F4CE84 = {
+			isa = PBXGroup;
+			children = (
+				7E6A36C2160084F000F4CE84 /* ESDatabaseWrapper */,
+				7E6A36BF160084F000F4CE84 /* Frameworks */,
+				7E6A36BE160084F000F4CE84 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		7E6A36BE160084F000F4CE84 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7E6A36BD160084F000F4CE84 /* libESDatabaseWrapper.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		7E6A36BF160084F000F4CE84 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				7E6A36C0160084F000F4CE84 /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		7E6A36C2160084F000F4CE84 /* ESDatabaseWrapper */ = {
+			isa = PBXGroup;
+			children = (
+				7E6A36C5160084F000F4CE84 /* ESDatabaseWrapper.h */,
+				7E6A36C7160084F000F4CE84 /* ESDatabaseWrapper.m */,
+				7E6A36C3160084F000F4CE84 /* Supporting Files */,
+			);
+			path = ESDatabaseWrapper;
+			sourceTree = "<group>";
+		};
+		7E6A36C3160084F000F4CE84 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				7E6A36C4160084F000F4CE84 /* ESDatabaseWrapper-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		7E6A36BC160084F000F4CE84 /* ESDatabaseWrapper */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7E6A36CB160084F000F4CE84 /* Build configuration list for PBXNativeTarget "ESDatabaseWrapper" */;
+			buildPhases = (
+				7E6A36B9160084F000F4CE84 /* Sources */,
+				7E6A36BA160084F000F4CE84 /* Frameworks */,
+				7E6A36BB160084F000F4CE84 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ESDatabaseWrapper;
+			productName = ESDatabaseWrapper;
+			productReference = 7E6A36BD160084F000F4CE84 /* libESDatabaseWrapper.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		7E6A36B4160084F000F4CE84 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0440;
+				ORGANIZATIONNAME = EmbeddedSources;
+			};
+			buildConfigurationList = 7E6A36B7160084F000F4CE84 /* Build configuration list for PBXProject "ESDatabaseWrapper" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 7E6A36B2160084F000F4CE84;
+			productRefGroup = 7E6A36BE160084F000F4CE84 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				7E6A36BC160084F000F4CE84 /* ESDatabaseWrapper */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		7E6A36B9160084F000F4CE84 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7E6A36C8160084F000F4CE84 /* ESDatabaseWrapper.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		7E6A36C9160084F000F4CE84 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		7E6A36CA160084F000F4CE84 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		7E6A36CC160084F000F4CE84 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/ESDatabaseWrapper.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "ESDatabaseWrapper/ESDatabaseWrapper-Prefix.pch";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		7E6A36CD160084F000F4CE84 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/ESDatabaseWrapper.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "ESDatabaseWrapper/ESDatabaseWrapper-Prefix.pch";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		7E6A36B7160084F000F4CE84 /* Build configuration list for PBXProject "ESDatabaseWrapper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7E6A36C9160084F000F4CE84 /* Debug */,
+				7E6A36CA160084F000F4CE84 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7E6A36CB160084F000F4CE84 /* Build configuration list for PBXNativeTarget "ESDatabaseWrapper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7E6A36CC160084F000F4CE84 /* Debug */,
+				7E6A36CD160084F000F4CE84 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 7E6A36B4160084F000F4CE84 /* Project object */;
+}
