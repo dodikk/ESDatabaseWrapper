@@ -1,8 +1,9 @@
 
-#import <ESDatabaseWrapper/ESQueriedSet.h>
+
 #import <ESDatabaseWrapper/ESReadOnlyDbWrapper.h>
 #import <ESDatabaseWrapper/ESWritableDbWrapper.h>
-#import <ESDatabaseWrapper/ESQueriedSet.h>
+#import <ESDatabaseWrapper/ESRwDbWrapper.h>
+
 #import <ESDatabaseWrapper/ESQueriedSet.h>
 #import <ESDatabaseWrapper/SqliteTypes.h>
 
