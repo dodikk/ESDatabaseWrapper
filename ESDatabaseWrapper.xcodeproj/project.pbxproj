@@ -9,7 +9,8 @@
 /* Begin PBXBuildFile section */
 		7E6A36C1160084F000F4CE84 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E6A36C0160084F000F4CE84 /* Foundation.framework */; };
 		7E6A36C6160084F000F4CE84 /* ESDatabaseWrapper.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7E6A36C5160084F000F4CE84 /* ESDatabaseWrapper.h */; };
-		7E6A36C8160084F000F4CE84 /* ESDatabaseWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A36C7160084F000F4CE84 /* ESDatabaseWrapper.m */; };
+		7E6A37181600857200F4CE84 /* FMDatabase+SelectWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A37171600857200F4CE84 /* FMDatabase+SelectWrapper.m */; };
+		7E925037160088FD0071D2EC /* FMDatabase+ InsertWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E925036160088FD0071D2EC /* FMDatabase+ InsertWrapper.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -30,7 +31,13 @@
 		7E6A36C0160084F000F4CE84 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		7E6A36C4160084F000F4CE84 /* ESDatabaseWrapper-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ESDatabaseWrapper-Prefix.pch"; sourceTree = "<group>"; };
 		7E6A36C5160084F000F4CE84 /* ESDatabaseWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ESDatabaseWrapper.h; sourceTree = "<group>"; };
-		7E6A36C7160084F000F4CE84 /* ESDatabaseWrapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ESDatabaseWrapper.m; sourceTree = "<group>"; };
+		7E6A37141600857200F4CE84 /* ESQueriedSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESQueriedSet.h; sourceTree = "<group>"; };
+		7E6A37151600857200F4CE84 /* ESReadOnlyDbWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESReadOnlyDbWrapper.h; sourceTree = "<group>"; };
+		7E6A37161600857200F4CE84 /* FMDatabase+SelectWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FMDatabase+SelectWrapper.h"; sourceTree = "<group>"; };
+		7E6A37171600857200F4CE84 /* FMDatabase+SelectWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "FMDatabase+SelectWrapper.m"; sourceTree = "<group>"; };
+		7E925034160088C80071D2EC /* ESWritableDbWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESWritableDbWrapper.h; sourceTree = "<group>"; };
+		7E925035160088FD0071D2EC /* FMDatabase+InsertWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FMDatabase+InsertWrapper.h"; sourceTree = "<group>"; };
+		7E925036160088FD0071D2EC /* FMDatabase+ InsertWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "FMDatabase+ InsertWrapper.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,8 +80,14 @@
 		7E6A36C2160084F000F4CE84 /* ESDatabaseWrapper */ = {
 			isa = PBXGroup;
 			children = (
+				7E6A37141600857200F4CE84 /* ESQueriedSet.h */,
+				7E6A37151600857200F4CE84 /* ESReadOnlyDbWrapper.h */,
+				7E925034160088C80071D2EC /* ESWritableDbWrapper.h */,
+				7E925035160088FD0071D2EC /* FMDatabase+InsertWrapper.h */,
+				7E925036160088FD0071D2EC /* FMDatabase+ InsertWrapper.m */,
+				7E6A37161600857200F4CE84 /* FMDatabase+SelectWrapper.h */,
+				7E6A37171600857200F4CE84 /* FMDatabase+SelectWrapper.m */,
 				7E6A36C5160084F000F4CE84 /* ESDatabaseWrapper.h */,
-				7E6A36C7160084F000F4CE84 /* ESDatabaseWrapper.m */,
 				7E6A36C3160084F000F4CE84 /* Supporting Files */,
 			);
 			path = ESDatabaseWrapper;
@@ -139,7 +152,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7E6A36C8160084F000F4CE84 /* ESDatabaseWrapper.m in Sources */,
+				7E6A37181600857200F4CE84 /* FMDatabase+SelectWrapper.m in Sources */,
+				7E925037160088FD0071D2EC /* FMDatabase+ InsertWrapper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -153,6 +167,12 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = YES;
+				CLANG_WARN_OBJCPP_ARC_ABI = YES;
+				CLANG_WARN_OBJC_IMPLICIT_ATOMIC_PROPERTIES = YES;
+				CLANG_WARN_OBJC_MISSING_PROPERTY_SYNTHESIS = YES;
+				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
+				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -163,10 +183,19 @@
 					"$(inherited)",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = YES;
+				GCC_WARN_SIGN_COMPARE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					../fmdb/src,
+					.,
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				SDKROOT = iphoneos;
 			};
@@ -179,13 +208,28 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = YES;
+				CLANG_WARN_OBJCPP_ARC_ABI = YES;
+				CLANG_WARN_OBJC_IMPLICIT_ATOMIC_PROPERTIES = YES;
+				CLANG_WARN_OBJC_MISSING_PROPERTY_SYNTHESIS = YES;
+				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
+				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = YES;
+				GCC_WARN_SIGN_COMPARE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					../fmdb/src,
+					.,
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -235,6 +279,7 @@
 				7E6A36CD160084F000F4CE84 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
