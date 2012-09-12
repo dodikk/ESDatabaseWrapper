@@ -2,7 +2,7 @@
 
 @protocol ESQueriedSet;
 
-@interface FMDatabase (SelectWrapper) //<SDbWrapper>
+@interface FMDatabase (SelectWrapper) //<ESReadOnlyDbWrapper>
 
 -(id<ESQueriedSet>)select:( NSString* )sql_;
 

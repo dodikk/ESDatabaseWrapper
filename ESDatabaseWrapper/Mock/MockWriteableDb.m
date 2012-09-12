@@ -23,7 +23,7 @@
 
 
 #pragma mark -
-#pragma mark DbWrapper
+#pragma mark ESWritableDbWrapper
 -(BOOL)open
 {
     self.mQueriesLog = [ NSMutableArray new ];
