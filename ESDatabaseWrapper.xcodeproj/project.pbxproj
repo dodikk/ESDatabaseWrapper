@@ -47,6 +47,7 @@
 		7E92504216008D980071D2EC /* MockReadableDb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockReadableDb.m; sourceTree = "<group>"; };
 		7E92507E160095690071D2EC /* SqliteTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SqliteTypes.h; sourceTree = "<group>"; };
 		7E92507F160095690071D2EC /* SqliteTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SqliteTypes.m; sourceTree = "<group>"; };
+		7E92510316009E0E0071D2EC /* ESRwDbWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESRwDbWrapper.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,6 +94,7 @@
 				7E6A37141600857200F4CE84 /* ESQueriedSet.h */,
 				7E6A37151600857200F4CE84 /* ESReadOnlyDbWrapper.h */,
 				7E925034160088C80071D2EC /* ESWritableDbWrapper.h */,
+				7E92510316009E0E0071D2EC /* ESRwDbWrapper.h */,
 				7E925035160088FD0071D2EC /* FMDatabase+InsertWrapper.h */,
 				7E925036160088FD0071D2EC /* FMDatabase+ InsertWrapper.m */,
 				7E6A37161600857200F4CE84 /* FMDatabase+SelectWrapper.h */,
