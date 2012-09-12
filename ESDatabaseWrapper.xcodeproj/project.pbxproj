@@ -11,6 +11,8 @@
 		7E6A36C6160084F000F4CE84 /* ESDatabaseWrapper.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7E6A36C5160084F000F4CE84 /* ESDatabaseWrapper.h */; };
 		7E6A37181600857200F4CE84 /* FMDatabase+SelectWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A37171600857200F4CE84 /* FMDatabase+SelectWrapper.m */; };
 		7E925037160088FD0071D2EC /* FMDatabase+ InsertWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E925036160088FD0071D2EC /* FMDatabase+ InsertWrapper.m */; };
+		7E92504316008D980071D2EC /* MockWriteableDb.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E92504016008D980071D2EC /* MockWriteableDb.m */; };
+		7E92504416008D980071D2EC /* MockReadableDb.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E92504216008D980071D2EC /* MockReadableDb.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -38,6 +40,10 @@
 		7E925034160088C80071D2EC /* ESWritableDbWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESWritableDbWrapper.h; sourceTree = "<group>"; };
 		7E925035160088FD0071D2EC /* FMDatabase+InsertWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FMDatabase+InsertWrapper.h"; sourceTree = "<group>"; };
 		7E925036160088FD0071D2EC /* FMDatabase+ InsertWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "FMDatabase+ InsertWrapper.m"; sourceTree = "<group>"; };
+		7E92503F16008D980071D2EC /* MockWriteableDb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockWriteableDb.h; sourceTree = "<group>"; };
+		7E92504016008D980071D2EC /* MockWriteableDb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockWriteableDb.m; sourceTree = "<group>"; };
+		7E92504116008D980071D2EC /* MockReadableDb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockReadableDb.h; sourceTree = "<group>"; };
+		7E92504216008D980071D2EC /* MockReadableDb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockReadableDb.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +86,7 @@
 		7E6A36C2160084F000F4CE84 /* ESDatabaseWrapper */ = {
 			isa = PBXGroup;
 			children = (
+				7E6A36C3160084F000F4CE84 /* Supporting Files */,
 				7E6A37141600857200F4CE84 /* ESQueriedSet.h */,
 				7E6A37151600857200F4CE84 /* ESReadOnlyDbWrapper.h */,
 				7E925034160088C80071D2EC /* ESWritableDbWrapper.h */,
@@ -87,8 +94,8 @@
 				7E925036160088FD0071D2EC /* FMDatabase+ InsertWrapper.m */,
 				7E6A37161600857200F4CE84 /* FMDatabase+SelectWrapper.h */,
 				7E6A37171600857200F4CE84 /* FMDatabase+SelectWrapper.m */,
+				7E92503E16008D980071D2EC /* Mock */,
 				7E6A36C5160084F000F4CE84 /* ESDatabaseWrapper.h */,
-				7E6A36C3160084F000F4CE84 /* Supporting Files */,
 			);
 			path = ESDatabaseWrapper;
 			sourceTree = "<group>";
@@ -99,6 +106,17 @@
 				7E6A36C4160084F000F4CE84 /* ESDatabaseWrapper-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		7E92503E16008D980071D2EC /* Mock */ = {
+			isa = PBXGroup;
+			children = (
+				7E92503F16008D980071D2EC /* MockWriteableDb.h */,
+				7E92504016008D980071D2EC /* MockWriteableDb.m */,
+				7E92504116008D980071D2EC /* MockReadableDb.h */,
+				7E92504216008D980071D2EC /* MockReadableDb.m */,
+			);
+			path = Mock;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -154,6 +172,8 @@
 			files = (
 				7E6A37181600857200F4CE84 /* FMDatabase+SelectWrapper.m in Sources */,
 				7E925037160088FD0071D2EC /* FMDatabase+ InsertWrapper.m in Sources */,
+				7E92504316008D980071D2EC /* MockWriteableDb.m in Sources */,
+				7E92504416008D980071D2EC /* MockReadableDb.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

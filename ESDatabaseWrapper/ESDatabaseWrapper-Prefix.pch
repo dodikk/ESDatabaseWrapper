@@ -1,7 +1,5 @@
-//
-// Prefix header for all source files of the 'ESDatabaseWrapper' target in the 'ESDatabaseWrapper' project
-//
 
 #ifdef __OBJC__
+    #import <objc/message.h>
     #import <Foundation/Foundation.h>
 #endif
