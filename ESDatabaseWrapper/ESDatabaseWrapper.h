@@ -9,3 +9,5 @@
 
 #import <ESDatabaseWrapper/Mock/MockReadableDb.h>
 #import <ESDatabaseWrapper/Mock/MockWriteableDb.h>
+
+#import <ESDatabaseWrapper/NSString+Sqlite3Escape.h>

@@ -1,5 +1,6 @@
 
 #ifdef __OBJC__
+    #import <sqlite3.h>
     #import <objc/message.h>
     #import <Foundation/Foundation.h>
 #endif

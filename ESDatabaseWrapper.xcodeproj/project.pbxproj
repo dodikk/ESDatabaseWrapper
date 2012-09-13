@@ -14,6 +14,7 @@
 		7E92504316008D980071D2EC /* MockWriteableDb.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E92504016008D980071D2EC /* MockWriteableDb.m */; };
 		7E92504416008D980071D2EC /* MockReadableDb.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E92504216008D980071D2EC /* MockReadableDb.m */; };
 		7E925080160095690071D2EC /* SqliteTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E92507F160095690071D2EC /* SqliteTypes.m */; };
+		7E9253101600CF100071D2EC /* NSString+Sqlite3Escape.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E92530F1600CF0F0071D2EC /* NSString+Sqlite3Escape.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -48,6 +49,8 @@
 		7E92507E160095690071D2EC /* SqliteTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SqliteTypes.h; sourceTree = "<group>"; };
 		7E92507F160095690071D2EC /* SqliteTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SqliteTypes.m; sourceTree = "<group>"; };
 		7E92510316009E0E0071D2EC /* ESRwDbWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESRwDbWrapper.h; sourceTree = "<group>"; };
+		7E92530E1600CF0F0071D2EC /* NSString+Sqlite3Escape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Sqlite3Escape.h"; sourceTree = "<group>"; };
+		7E92530F1600CF0F0071D2EC /* NSString+Sqlite3Escape.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Sqlite3Escape.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +102,8 @@
 				7E925036160088FD0071D2EC /* FMDatabase+ InsertWrapper.m */,
 				7E6A37161600857200F4CE84 /* FMDatabase+SelectWrapper.h */,
 				7E6A37171600857200F4CE84 /* FMDatabase+SelectWrapper.m */,
+				7E92530E1600CF0F0071D2EC /* NSString+Sqlite3Escape.h */,
+				7E92530F1600CF0F0071D2EC /* NSString+Sqlite3Escape.m */,
 				7E92507E160095690071D2EC /* SqliteTypes.h */,
 				7E92507F160095690071D2EC /* SqliteTypes.m */,
 				7E92503E16008D980071D2EC /* Mock */,
@@ -182,6 +187,7 @@
 				7E92504316008D980071D2EC /* MockWriteableDb.m in Sources */,
 				7E92504416008D980071D2EC /* MockReadableDb.m in Sources */,
 				7E925080160095690071D2EC /* SqliteTypes.m in Sources */,
+				7E9253101600CF100071D2EC /* NSString+Sqlite3Escape.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
