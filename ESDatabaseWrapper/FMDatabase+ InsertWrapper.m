@@ -20,4 +20,10 @@
     return [ self update: sql_ withErrorAndBindings: error_ ];
 }
 
+-(BOOL)sqlDelete:( NSString* )sql_
+           error:( NSError** )error_
+{
+    return [ self update: sql_ withErrorAndBindings: error_ ];
+}
+
 @end

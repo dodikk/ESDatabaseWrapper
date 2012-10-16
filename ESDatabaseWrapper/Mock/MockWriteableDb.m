@@ -60,6 +60,12 @@
     return YES;
 }
 
+-(BOOL)sqlDelete:(NSString *)sql_ error:(NSError *__autoreleasing *)error_
+{
+    [ self.mQueriesLog addObject: [ sql_ copy ] ];
+    return YES;
+}
+
 
 -(BOOL)createTable:( NSString* )sql_
              error:( NSError** )error_
