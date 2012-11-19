@@ -55,4 +55,10 @@
     return YES;
 }
 
+-(BOOL)columnExists:( NSString* )columnName_
+            inTable:( NSString* )tableName_
+{
+    return NO;
+}
+
 @end

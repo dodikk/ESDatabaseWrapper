@@ -10,6 +10,7 @@
 
 
 -(NSError*)lastError;
+
 -(id<ESQueriedSet>)select:( NSString* )sql_;
 -(double)selectDoubleScalar:( NSString* )sql_;
 -(NSInteger)selectIntScalar:( NSString* )sql_;
@@ -18,5 +19,7 @@
 
 -(NSString*)databasePath;
 -(BOOL)tableExists:(NSString*)tableName_;
+-(BOOL)columnExists:( NSString* )columnName_
+            inTable:( NSString* )tableName_;
 
 @end

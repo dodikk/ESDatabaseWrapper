@@ -29,4 +29,16 @@
     return [ self boolForQuery: sql_ ];
 }
 
+-(BOOL)columnExists:( NSString* )columnName_
+            inTable:( NSString* )tableName_
+{
+    if ( ![ self tableExists: tableName_ ] )
+    {
+        return NO;
+    }
+    
+    return [ self columnExists: tableName_
+                    columnName: columnName_ ];
+}
+
 @end

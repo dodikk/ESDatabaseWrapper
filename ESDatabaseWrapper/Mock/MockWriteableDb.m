@@ -41,6 +41,11 @@
     return nil;
 }
 
+-(int)lastErrorCode
+{
+    return 0;
+}
+
 -(BOOL)tableExists:(NSString*)tableName_
 {
     return NO;
