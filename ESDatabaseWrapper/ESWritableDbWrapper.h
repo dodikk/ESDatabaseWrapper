@@ -6,7 +6,7 @@
 -(BOOL)open;
 -(BOOL)close;
 
-
+-(void)enableDiagnostics;
 -(NSError*)lastError;
 
 -(BOOL)insert:( NSString* )sql_

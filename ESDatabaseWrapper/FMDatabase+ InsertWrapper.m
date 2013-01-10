@@ -26,4 +26,10 @@
     return [ self update: sql_ withErrorAndBindings: error_ ];
 }
 
+-(void)enableDiagnostics
+{
+    self.traceExecution = YES;
+    self.logsErrors     = YES;
+}
+
 @end

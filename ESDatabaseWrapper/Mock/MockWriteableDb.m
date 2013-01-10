@@ -21,6 +21,10 @@
     return [ self.mQueriesLog copy ];
 }
 
+-(void)enableDiagnostics
+{
+    // IDLE
+}
 
 #pragma mark -
 #pragma mark ESWritableDbWrapper
