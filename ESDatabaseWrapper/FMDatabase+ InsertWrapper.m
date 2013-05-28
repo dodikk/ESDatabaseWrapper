@@ -28,7 +28,7 @@
 
 -(void)enableDiagnostics
 {
-    self.traceExecution = YES;
+    //self.traceExecution = YES;
     self.logsErrors     = YES;
 }
 

@@ -61,4 +61,17 @@
     return NO;
 }
 
+-(NSDate*)nowDate
+{
+    return [ NSDate date ];
+}
+
+-(NSDate*)selectDateScalar:( NSString* )sql_
+            usingFormatter:( NSDateFormatter* )df_
+                threadSafe:( BOOL )isThreadSafe_
+{
+    [ self select: sql_ ];
+    return [ self nowDate ];
+}
+
 @end
