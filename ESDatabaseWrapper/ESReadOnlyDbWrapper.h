@@ -17,6 +17,10 @@
 -(NSString*)selectStringScalar:( NSString* )sql_;
 -(BOOL)selectBooleanScalar:( NSString* )sql_;
 
+-(NSDate*)selectDateScalar:( NSString* )sql_
+            usingFormatter:( NSDateFormatter* )df_
+                threadSafe:( BOOL )yesNo_;
+
 -(NSString*)databasePath;
 -(BOOL)tableExists:(NSString*)tableName_;
 -(BOOL)columnExists:( NSString* )columnName_

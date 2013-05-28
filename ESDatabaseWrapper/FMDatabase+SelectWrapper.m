@@ -41,4 +41,27 @@
                     columnName: columnName_ ];
 }
 
+-(NSDate*)selectDateScalar:( NSString* )sql_
+            usingFormatter:( NSDateFormatter* )df_
+                threadSafe:( BOOL )isThreadSafe_
+{
+    NSString* dateStr_ = [ self selectStringScalar: sql_ ];
+    if ( nil == dateStr_ )
+    {
+        return nil;
+    }
+    
+    if ( isThreadSafe_ )
+    {
+        @synchronized (df_)
+        {
+            return [ df_ dateFromString: dateStr_ ];
+        }
+    }
+    else
+    {
+        return [ df_ dateFromString: dateStr_ ];
+    }
+}
+
 @end

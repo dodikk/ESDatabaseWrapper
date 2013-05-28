@@ -8,4 +8,7 @@
 -(BOOL)columnExists:( NSString* )columnName_
             inTable:( NSString* )tableName_;
 
+-(NSDate*)selectDateScalar:( NSString* )sql_
+            usingFormatter:( NSDateFormatter* )df_
+                threadSafe:( BOOL )yesNo_;
 @end
