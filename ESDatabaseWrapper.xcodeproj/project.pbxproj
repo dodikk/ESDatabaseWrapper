@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7E340B2E180400DE0053832D /* FMDatabase+ESReadonlyDbScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E340B2D180400DE0053832D /* FMDatabase+ESReadonlyDbScheme.m */; };
 		7E472DD71754C7F500E1111F /* ESDbWrapperRefCountGuard.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E472DD61754C7F500E1111F /* ESDbWrapperRefCountGuard.m */; };
 		7E6A36C1160084F000F4CE84 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E6A36C0160084F000F4CE84 /* Foundation.framework */; };
 		7E6A36C6160084F000F4CE84 /* ESDatabaseWrapper.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7E6A36C5160084F000F4CE84 /* ESDatabaseWrapper.h */; };
@@ -33,6 +34,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		7E12A85A1781760500085418 /* ESTransactionsWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ESTransactionsWrapper.h; sourceTree = "<group>"; };
+		7E340B2B180400A60053832D /* ESReadonlyDbScheme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ESReadonlyDbScheme.h; sourceTree = "<group>"; };
+		7E340B2C180400DE0053832D /* FMDatabase+ESReadonlyDbScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FMDatabase+ESReadonlyDbScheme.h"; sourceTree = "<group>"; };
+		7E340B2D180400DE0053832D /* FMDatabase+ESReadonlyDbScheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "FMDatabase+ESReadonlyDbScheme.m"; sourceTree = "<group>"; };
 		7E472DD51754C7F500E1111F /* ESDbWrapperRefCountGuard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESDbWrapperRefCountGuard.h; sourceTree = "<group>"; };
 		7E472DD61754C7F500E1111F /* ESDbWrapperRefCountGuard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESDbWrapperRefCountGuard.m; sourceTree = "<group>"; };
 		7E6A36BD160084F000F4CE84 /* libESDatabaseWrapper.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libESDatabaseWrapper.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -103,9 +108,13 @@
 				7E6A36C3160084F000F4CE84 /* Supporting Files */,
 				7E6A37141600857200F4CE84 /* ESQueriedSet.h */,
 				7E6A37151600857200F4CE84 /* ESReadOnlyDbWrapper.h */,
+				7E340B2B180400A60053832D /* ESReadonlyDbScheme.h */,
 				7EBF41BA16C39DC1001B531A /* ESReadOnlyDbWrapper_Cpp.h */,
 				7E925034160088C80071D2EC /* ESWritableDbWrapper.h */,
+				7E12A85A1781760500085418 /* ESTransactionsWrapper.h */,
 				7E92510316009E0E0071D2EC /* ESRwDbWrapper.h */,
+				7E340B2C180400DE0053832D /* FMDatabase+ESReadonlyDbScheme.h */,
+				7E340B2D180400DE0053832D /* FMDatabase+ESReadonlyDbScheme.m */,
 				7E925035160088FD0071D2EC /* FMDatabase+InsertWrapper.h */,
 				7E925036160088FD0071D2EC /* FMDatabase+ InsertWrapper.m */,
 				7E6A37161600857200F4CE84 /* FMDatabase+SelectWrapper.h */,
@@ -194,6 +203,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7E340B2E180400DE0053832D /* FMDatabase+ESReadonlyDbScheme.m in Sources */,
 				7E6A37181600857200F4CE84 /* FMDatabase+SelectWrapper.m in Sources */,
 				7E925037160088FD0071D2EC /* FMDatabase+ InsertWrapper.m in Sources */,
 				7E92504316008D980071D2EC /* MockWriteableDb.m in Sources */,

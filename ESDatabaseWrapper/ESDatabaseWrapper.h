@@ -1,5 +1,6 @@
 
 #ifdef __OBJC__
+    #import <ESDatabaseWrapper/ESReadonlyDbScheme.h>
     #import <ESDatabaseWrapper/ESReadOnlyDbWrapper.h>
     #import <ESDatabaseWrapper/ESWritableDbWrapper.h>
     #import <ESDatabaseWrapper/ESRwDbWrapper.h>
