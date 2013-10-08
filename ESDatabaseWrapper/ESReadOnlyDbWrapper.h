@@ -5,6 +5,7 @@
 @protocol ESReadOnlyDbWrapper <NSObject>
 
 -(id)initWithPath:(NSString*)inPath_;
+-(BOOL)isOpen;
 -(BOOL)open;
 -(BOOL)close;
 

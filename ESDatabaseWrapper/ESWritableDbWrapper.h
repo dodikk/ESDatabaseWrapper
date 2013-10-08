@@ -5,6 +5,7 @@
 -(id)initWithPath:(NSString*)inPath_;
 -(BOOL)open;
 -(BOOL)close;
+-(BOOL)isOpen;
 
 -(void)enableDiagnostics;
 -(NSError*)lastError;

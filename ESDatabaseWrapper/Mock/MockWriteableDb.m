@@ -13,12 +13,18 @@
 
 -(id)initWithPath:(NSString*)inPath_
 {
-    return [ super init ];
+    self = [ super init ];
+    return self;
 }
 
 -(NSArray*)queriesLog
 {
     return [ self.mQueriesLog copy ];
+}
+
+-(BOOL)isOpen
+{
+    return YES;
 }
 
 -(void)enableDiagnostics

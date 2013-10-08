@@ -3,6 +3,11 @@
 
 @implementation FMDatabase (SelectWrapper)
 
+-(BOOL)isOpen
+{
+    return [ self goodConnection ];
+}
+
 -(id<ESQueriedSet>)select:( NSString* )sql_
 {
    FMResultSet* result_ = [ self executeQuery: sql_ ];
