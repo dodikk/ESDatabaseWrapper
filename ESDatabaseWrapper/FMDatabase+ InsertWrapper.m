@@ -32,4 +32,17 @@
     self.logsErrors     = YES;
 }
 
+// @adk - implemented in FMDatabase
+//-(void)beginTransaction
+
+-(BOOL)commitTransaction
+{
+    return [ self commit ];
+}
+
+-(BOOL)rollbackTransaction
+{
+    return [ self rollback ];
+}
+
 @end
