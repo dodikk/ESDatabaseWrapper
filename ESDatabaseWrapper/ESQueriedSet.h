@@ -4,6 +4,7 @@
 
 - (BOOL)next;
 - (BOOL)hasAnotherRow;
+-(void)close;
 
 - (int)columnCount;
 
