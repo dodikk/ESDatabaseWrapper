@@ -27,4 +27,6 @@
 -(BOOL)columnExists:( NSString* )columnName_
             inTable:( NSString* )tableName_;
 
+-(NSArray*)selectStringArray:( NSString* )sql;
+
 @end

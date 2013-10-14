@@ -74,4 +74,10 @@
     return [ self nowDate ];
 }
 
+-(NSArray*)selectStringArray:( NSString* )sql
+{
+    [ self select: sql ];
+    return @[ @"" ];
+}
+
 @end

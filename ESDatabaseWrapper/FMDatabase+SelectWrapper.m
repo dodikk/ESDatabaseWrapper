@@ -69,4 +69,22 @@
     }
 }
 
+-(NSArray*)selectStringArray:( NSString* )sql
+{
+    FMResultSet* dataset = [ self executeQuery: sql ];
+    if ( nil == dataset )
+    {
+        return nil;
+    }
+    
+    NSMutableArray* result = [ NSMutableArray new ];
+    while ( [ dataset next ] )
+    {
+        NSString* stringItem = [ dataset stringForColumnIndex: 0 ];
+        [ result addObject: stringItem ];
+    }
+    
+    return [ NSArray arrayWithArray: result ];
+}
+
 @end
