@@ -228,11 +228,19 @@
 
 - (void)setCachedStatement:(FMStatement*)statement forQuery:(NSString*)query {
     
+    // @adk - made xCode 5 analyzer happy
+    if ( nil == query )
+    {
+        return;
+    }
+    
     query = [query copy]; // in case we got handed in a mutable string...
     
     [statement setQuery:query];
     
-    [_cachedStatements setObject:statement forKey:query];
+    NSParameterAssert( nil != query );
+    [ self->_cachedStatements setObject: statement
+                                 forKey: query ];
     
     FMDBRelease(query);
 }
@@ -754,7 +762,7 @@
             // SQLITE_ERROR is received instead of SQLITE_LOCKED on indexing a table when some parallel "insert" operations executing.
             BOOL createIndexWorkaroundCondition_ = (SQLITE_ERROR == rc);
             
-            if (SQLITE_BUSY == rc || SQLITE_LOCKED == rc || createIndexWorkaroundCondition_ )
+            if (SQLITE_BUSY == rc || SQLITE_LOCKED == rc /*|| createIndexWorkaroundCondition_*/ )
             {
                 retry = YES;
                 usleep(20);

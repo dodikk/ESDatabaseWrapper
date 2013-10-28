@@ -59,7 +59,9 @@
     FMDBRelease(_path);
     
     if (_queue) {
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0
         dispatch_release(_queue);
+#endif
         _queue = 0x00;
     }
 #if ! __has_feature(objc_arc)
