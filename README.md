@@ -16,3 +16,7 @@ Setup script :
 ---
 cd ..
 git clone https://github.com/ccgus/fmdb.git
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/dodikk/esdatabasewrapper/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
