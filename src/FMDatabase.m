@@ -340,18 +340,23 @@
 }
 
 -(NSError*)errorWithMessage:( NSString* )message_
+                    sqlText:( NSString* )sql_
 {
     NSDictionary* errorMessage_ = [ NSDictionary dictionaryWithObject: message_ 
                                                                forKey: NSLocalizedDescriptionKey];
+    FMError* result = [ FMError errorWithDomain: @"FMDatabase"
+                                           code: sqlite3_errcode(_db)
+                                       userInfo: errorMessage_ ];
+    result.sqlQuery = sql_;
+    result.databasePath = self.databasePath;
     
-    return [ FMError errorWithDomain:@"FMDatabase"
-                                code:sqlite3_errcode(_db)
-                            userInfo:errorMessage_];
+    return result;
 }
 
 -(NSError*)lastError
 {
-   return [ self errorWithMessage: [ self lastErrorMessage ] ];
+   return [ self errorWithMessage: [ self lastErrorMessage ]
+                          sqlText: nil ];
 }
 
 - (sqlite_int64)lastInsertRowId {
@@ -760,9 +765,10 @@
             rc      = sqlite3_prepare_v2(_db, [sql UTF8String], -1, &pStmt, 0);
             
             // SQLITE_ERROR is received instead of SQLITE_LOCKED on indexing a table when some parallel "insert" operations executing.
-            BOOL createIndexWorkaroundCondition_ = (SQLITE_ERROR == rc);
+            BOOL createIndexWorkaroundCondition_ = NO;
+            //(SQLITE_ERROR == rc);
             
-            if (SQLITE_BUSY == rc || SQLITE_LOCKED == rc /*|| createIndexWorkaroundCondition_*/ )
+            if (SQLITE_BUSY == rc || SQLITE_LOCKED == rc || createIndexWorkaroundCondition_ )
             {
                 retry = YES;
                 usleep(20);
@@ -800,8 +806,9 @@
                 if (outErr) {
                     
                     
-                    
-                    *outErr = [ self errorWithMessage: [NSString stringWithUTF8String:sqlite3_errmsg(_db)] ];
+                    NSString* sqliteErrorMessage = [ NSString stringWithUTF8String:sqlite3_errmsg(_db)];
+                    *outErr = [ self errorWithMessage: sqliteErrorMessage
+                                              sqlText: sql ];
                 }
                 
                 _isExecutingStatement = NO;
