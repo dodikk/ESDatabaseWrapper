@@ -4,7 +4,10 @@
 
 -(id<ESQueriedSet>)select:( NSString* )sql_
 {
-    NSMutableArray* queriesLog_ = objc_msgSend( self, @selector(mQueriesLog) );
+    typedef NSMutableArray* (*QueriesLogMsgSendFunction)( id, SEL );
+    static const QueriesLogMsgSendFunction getQueriesLog = (QueriesLogMsgSendFunction)objc_msgSend;
+    
+    NSMutableArray* queriesLog_ = getQueriesLog( self, @selector(mQueriesLog) );
     [ queriesLog_ addObject: sql_ ];
 
     return nil;
