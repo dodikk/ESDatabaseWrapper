@@ -1,17 +1,23 @@
+/* main.m
+ *
+ * Sample code to illustrate some of the basic FMDB classes and run them through their paces for illustrative purposes.
+ */
+
 #import <Foundation/Foundation.h>
-#import "FMDatabase.h"
-#import "FMDatabaseAdditions.h"
-#import "FMDatabasePool.h"
-#import "FMDatabaseQueue.h"
+#import "FMDB.h"
 
 #define FMDBQuickCheck(SomeBool) { if (!(SomeBool)) { NSLog(@"Failure on line %d", __LINE__); abort(); } }
 
 void testPool(NSString *dbPath);
+void testDateFormat();
+void FMDBReportABugFunction();
+void testStatementCaching();
 
 int main (int argc, const char * argv[]) {
     
 @autoreleasepool {
-        
+    
+    FMDBReportABugFunction();
     
     NSString *dbPath = @"/tmp/tmp.db";
     
@@ -50,10 +56,38 @@ int main (int argc, const char * argv[]) {
     }
     
     NSError *err = 0x00;
-    FMDBQuickCheck(![db update:@"blah blah blah" withErrorAndBindings:&err]);
+    FMDBQuickCheck(![db executeUpdate:@"blah blah blah" withErrorAndBindings:&err]);
     FMDBQuickCheck(err != nil);
     FMDBQuickCheck([err code] == SQLITE_ERROR);
     NSLog(@"err: '%@'", err);
+    
+    
+    
+    // empty strings should still return a value.
+    FMDBQuickCheck(([db boolForQuery:@"SELECT ? not null", @""]));
+    
+    // same with empty bits o' mutable data
+    FMDBQuickCheck(([db boolForQuery:@"SELECT ? not null", [NSMutableData data]]));
+    
+    // same with empty bits o' data
+    FMDBQuickCheck(([db boolForQuery:@"SELECT ? not null", [NSData data]]));
+
+    
+    
+    // how do we do pragmas?  Like so:
+    FMResultSet *ps = [db executeQuery:@"pragma journal_mode=delete"];
+    FMDBQuickCheck(![db hadError]);
+    FMDBQuickCheck(ps);
+    FMDBQuickCheck([ps next]);
+    [ps close];
+    
+    // oh, but some pragmas require updates?
+    [db executeUpdate:@"pragma page_size=2048"];
+    FMDBQuickCheck(![db hadError]);
+    
+    // what about a vacuum?
+    [db executeUpdate:@"vacuum"];
+    FMDBQuickCheck(![db hadError]);
     
     // but of course, I don't bother checking the error codes below.
     // Bad programmer, no cookie.
@@ -119,6 +153,22 @@ int main (int argc, const char * argv[]) {
     
     FMDBQuickCheck(![db hasOpenResultSets]);
     
+    
+    
+    rs = [db executeQuery:@"select rowid, a, b, c from test"];
+    while ([rs next]) {
+        
+        FMDBQuickCheck([rs[0] isEqual:rs[@"rowid"]]);
+        FMDBQuickCheck([rs[1] isEqual:rs[@"a"]]);
+        FMDBQuickCheck([rs[2] isEqual:rs[@"b"]]);
+        FMDBQuickCheck([rs[3] isEqual:rs[@"c"]]);
+    }
+    [rs close];
+    
+    
+    
+    
+    
     [db executeUpdate:@"create table ull (a integer)"];
     
     [db executeUpdate:@"insert into ull (a) values (?)" , [NSNumber numberWithUnsignedLongLong:ULLONG_MAX]];
@@ -156,6 +206,93 @@ int main (int argc, const char * argv[]) {
     rs = [db getTableSchema:@"234 fds"];
     FMDBQuickCheck([rs next]);
     [rs close];
+
+
+#if SQLITE_VERSION_NUMBER >= 3007017
+    {
+        uint32_t appID = NSHFSTypeCodeFromFileType(NSFileTypeForHFSTypeCode('fmdb'));
+        
+        [db setApplicationID:appID];
+        
+        uint32_t rAppID = [db applicationID];
+        
+        NSLog(@"rAppID: %d", rAppID);
+        
+        FMDBQuickCheck(rAppID == appID);
+        
+        [db setApplicationIDString:@"acrn"];
+        
+        NSString *s = [db applicationIDString];
+        
+        NSLog(@"s: '%@'", s);
+        
+        FMDBQuickCheck([s isEqualToString:@"acrn"]);
+        
+    }
+    
+#endif
+
+
+    {
+        // -------------------------------------------------------------------------------
+        // Named parameters count test.
+
+        FMDBQuickCheck([db executeUpdate:@"create table namedparamcounttest (a text, b text, c integer, d double)"]);
+        NSMutableDictionary *dictionaryArgs = [NSMutableDictionary dictionary];
+        [dictionaryArgs setObject:@"Text1" forKey:@"a"];
+        [dictionaryArgs setObject:@"Text2" forKey:@"b"];
+        [dictionaryArgs setObject:[NSNumber numberWithInt:1] forKey:@"c"];
+        [dictionaryArgs setObject:[NSNumber numberWithDouble:2.0] forKey:@"d"];
+        FMDBQuickCheck([db executeUpdate:@"insert into namedparamcounttest values (:a, :b, :c, :d)" withParameterDictionary:dictionaryArgs]);
+        
+        rs = [db executeQuery:@"select * from namedparamcounttest"];
+        
+        FMDBQuickCheck((rs != nil));
+        
+        [rs next];
+        
+        FMDBQuickCheck([[rs stringForColumn:@"a"] isEqualToString:@"Text1"]);
+        FMDBQuickCheck([[rs stringForColumn:@"b"] isEqualToString:@"Text2"]);
+        FMDBQuickCheck([rs intForColumn:@"c"] == 1);
+        FMDBQuickCheck([rs doubleForColumn:@"d"] == 2.0);
+        
+        [rs close];
+        
+        // note that at this point, dictionaryArgs has way more values than we need, but the query should still work since
+        // a is in there, and that's all we need.
+        rs = [db executeQuery:@"select * from namedparamcounttest where a = :a" withParameterDictionary:dictionaryArgs];
+        
+        FMDBQuickCheck((rs != nil));
+        FMDBQuickCheck([rs next]);
+        [rs close];
+        
+        
+        
+        // ***** Please note the following codes *****
+        
+        dictionaryArgs = [NSMutableDictionary dictionary];
+        
+        [dictionaryArgs setObject:@"NewText1" forKey:@"a"];
+        [dictionaryArgs setObject:@"NewText2" forKey:@"b"];
+        [dictionaryArgs setObject:@"OneMoreText" forKey:@"OneMore"];
+        
+        BOOL rc = [db executeUpdate:@"update namedparamcounttest set a = :a, b = :b where b = 'Text2'" withParameterDictionary:dictionaryArgs];
+        
+        FMDBQuickCheck(rc);
+        
+        if (!rc) {
+            NSLog(@"ERROR: %d - %@", db.lastErrorCode, db.lastErrorMessage);
+        }
+    
+        
+    }
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -200,14 +337,14 @@ int main (int argc, const char * argv[]) {
     NSLog(@"Count of changes (should be 1): %d", [db changes]);
     FMDBQuickCheck([db changes] == 1);
     
-    int a = [db intForQuery:@"select a from t1 where a = ?", [NSNumber numberWithInt:5]];
-    if (a != 5) {
+    int ia = [db intForQuery:@"select a from t1 where a = ?", [NSNumber numberWithInt:5]];
+    if (ia != 5) {
         NSLog(@"intForQuery didn't work (a != 5)");
     }
     
     // test the busy rety timeout schtuff.
     
-    [db setBusyRetryTimeout:500];
+    [db setMaxBusyRetryTimeInterval:5];
     
     FMDatabase *newDb = [FMDatabase databaseWithPath:dbPath];
     [newDb open];
@@ -216,6 +353,8 @@ int main (int argc, const char * argv[]) {
     [rs next]; // just grab one... which will keep the db locked.
     
     NSLog(@"Testing the busy timeout");
+    
+    NSTimeInterval startTime = [NSDate timeIntervalSinceReferenceDate];
     
     BOOL success = [db executeUpdate:@"insert into t1 values (5)"];
     
@@ -239,7 +378,9 @@ int main (int argc, const char * argv[]) {
         NSLog(@"Hurray, we can insert again!");
     }
     
+    NSTimeInterval end = [NSDate timeIntervalSinceReferenceDate] - startTime;
     
+    NSLog(@"Took %f seconds for the timeout.", end);
     
     // test some nullness.
     [db executeUpdate:@"create table t2 (a integer, b integer)"];
@@ -253,10 +394,10 @@ int main (int argc, const char * argv[]) {
     
     rs = [db executeQuery:@"select * from t2"];
     while ([rs next]) {
-        NSString *a = [rs stringForColumnIndex:0];
+        NSString *aa = [rs stringForColumnIndex:0];
         NSString *b = [rs stringForColumnIndex:1];
         
-        if (a != nil) {
+        if (aa != nil) {
             NSLog(@"%s:%d", __FUNCTION__, __LINE__);
             NSLog(@"OH OH, PROBLEMO!");
             return 10;
@@ -345,8 +486,9 @@ int main (int argc, const char * argv[]) {
     }
     
     
-    
-    
+    FMDBQuickCheck([db columnExists:@"a" inTableWithName:@"nulltest"]);
+    FMDBQuickCheck([db columnExists:@"b" inTableWithName:@"nulltest"]);
+    FMDBQuickCheck(![db columnExists:@"c" inTableWithName:@"nulltest"]);
     
     
     // null dates
@@ -399,6 +541,9 @@ int main (int argc, const char * argv[]) {
     
     [db executeUpdate:@"create table nulltest2 (s text, d data, i integer, f double, b integer)"];
     
+    // grab the data for this again, since we overwrote it with some memory that has since disapeared.
+    safariCompass = [NSData dataWithContentsOfFile:@"/Applications/Safari.app/Contents/Resources/compass.icns"];
+    
     [db executeUpdate:@"insert into nulltest2 (s, d, i, f, b) values (?, ?, ?, ?, ?)" , @"Hi", safariCompass, [NSNumber numberWithInt:12], [NSNumber numberWithFloat:4.4f], [NSNumber numberWithBool:YES]];
     [db executeUpdate:@"insert into nulltest2 (s, d, i, f, b) values (?, ?, ?, ?, ?)" , nil, nil, nil, nil, [NSNull null]];
     
@@ -406,7 +551,7 @@ int main (int argc, const char * argv[]) {
     
     while ([rs next]) {
         
-        int i = [rs intForColumnIndex:2];
+        i = [rs intForColumnIndex:2];
         
         if (i == 12) {
             // it's the first row we inserted.
@@ -450,6 +595,17 @@ int main (int argc, const char * argv[]) {
         }
     }
     
+    
+    
+    {
+        
+        [db executeUpdate:@"create table utest (a text)"];
+        [db executeUpdate:@"insert into utest values (?)", @"/übertest"];
+        
+        rs = [db executeQuery:@"select * from utest where a = ?", @"/übertest"];
+        FMDBQuickCheck([rs next]);
+        [rs close];
+    }   
     
     
     {
@@ -530,7 +686,7 @@ int main (int argc, const char * argv[]) {
     
     {
         FMDBQuickCheck([db executeUpdate:@"create table t5 (a text, b int, c blob, d text, e text)"]);
-        FMDBQuickCheck(([db executeUpdateWithFormat:@"insert into t5 values (%s, %d, %@, %c, %lld)", "text", 42, @"BLOB", 'd', 12345678901234]));
+        FMDBQuickCheck(([db executeUpdateWithFormat:@"insert into t5 values (%s, %d, %@, %c, %lld)", "text", 42, @"BLOB", 'd', 12345678901234ll]));
         
         rs = [db executeQueryWithFormat:@"select * from t5 where a = %s and a = %@ and b = %d", "text", @"text", 42];
         FMDBQuickCheck((rs != nil));
@@ -578,15 +734,32 @@ int main (int argc, const char * argv[]) {
         
     }
     
-    
-    
-    
     {
-        NSError *err;
-        FMDBQuickCheck(([db update:@"insert into t5 values (?, ?, ?, ?, ?)" withErrorAndBindings:&err, @"text", [NSNumber numberWithInt:42], @"BLOB", @"d", [NSNumber numberWithInt:0]]));
+        FMDBQuickCheck([db executeUpdate:@"create table tatwhat (a text)"]);
+        
+        BOOL worked = [db executeUpdateWithFormat:@"insert into tatwhat values(%@)", nil];
+        
+        FMDBQuickCheck(worked);
+        
+        rs = [db executeQueryWithFormat:@"select * from tatwhat"];
+        FMDBQuickCheck((rs != nil));
+        FMDBQuickCheck(([rs next]));
+        FMDBQuickCheck([rs columnIndexIsNull:0]);
+        
+        FMDBQuickCheck((![rs next]));
         
     }
     
+    
+    {
+        FMDBQuickCheck(([db executeUpdate:@"insert into t5 values (?, ?, ?, ?, ?)" withErrorAndBindings:&err, @"text", [NSNumber numberWithInt:42], @"BLOB", @"d", [NSNumber numberWithInt:0]]));
+        
+    }
+    
+    {
+        rs = [db executeQuery:@"select * from t5 where a=?" withArgumentsInArray:@[]];
+        FMDBQuickCheck((![rs next]));
+    }
     
     // test attach for the heck of it.
     {
@@ -652,7 +825,7 @@ int main (int argc, const char * argv[]) {
     }
     
     // just for fun.
-    rs = [db executeQuery:@"PRAGMA database_list"];
+    rs = [db executeQuery:@"pragma database_list"];
     while ([rs next]) {
         NSString *file = [rs stringForColumn:@"file"];
         NSLog(@"database_list: %@", file);
@@ -671,10 +844,20 @@ int main (int argc, const char * argv[]) {
     }
     
     
+    [db setShouldCacheStatements:true];
+    
+    [db executeUpdate:@"CREATE TABLE testCacheStatements(key INTEGER PRIMARY KEY, value INTEGER)"];
+    [db executeUpdate:@"INSERT INTO testCacheStatements (key, value) VALUES (1, 2)"];
+    [db executeUpdate:@"INSERT INTO testCacheStatements (key, value) VALUES (2, 4)"];
+    
+    FMDBQuickCheck([[db executeQuery:@"SELECT * FROM testCacheStatements WHERE key=1"] next]);
+    FMDBQuickCheck([[db executeQuery:@"SELECT * FROM testCacheStatements WHERE key=1"] next]);
+    
     [db close];
     
     
     testPool(dbPath);
+    testDateFormat();
     
     
     
@@ -683,19 +866,19 @@ int main (int argc, const char * argv[]) {
     FMDBQuickCheck(queue);
     
     {
-        [queue inDatabase:^(FMDatabase *db) {
+        [queue inDatabase:^(FMDatabase *adb) {
             
             
             
-            [db executeUpdate:@"create table qfoo (foo text)"];
-            [db executeUpdate:@"insert into qfoo values ('hi')"];
-            [db executeUpdate:@"insert into qfoo values ('hello')"];
-            [db executeUpdate:@"insert into qfoo values ('not')"];
+            [adb executeUpdate:@"create table qfoo (foo text)"];
+            [adb executeUpdate:@"insert into qfoo values ('hi')"];
+            [adb executeUpdate:@"insert into qfoo values ('hello')"];
+            [adb executeUpdate:@"insert into qfoo values ('not')"];
             
             
             
             int count = 0;
-            FMResultSet *rsl = [db executeQuery:@"select * from qfoo where foo like 'h%'"];
+            FMResultSet *rsl = [adb executeQuery:@"select * from qfoo where foo like 'h%'"];
             while ([rsl next]) {
                 count++;
             }
@@ -703,7 +886,7 @@ int main (int argc, const char * argv[]) {
             FMDBQuickCheck(count == 2);
             
             count = 0;
-            rsl = [db executeQuery:@"select * from qfoo where foo like ?", @"h%"];
+            rsl = [adb executeQuery:@"select * from qfoo where foo like ?", @"h%"];
             while ([rsl next]) {
                 count++;
             }
@@ -713,12 +896,36 @@ int main (int argc, const char * argv[]) {
         
     }
     
+    FMDatabaseQueue *queue2 = [FMDatabaseQueue databaseQueueWithPath:dbPath flags:SQLITE_OPEN_READONLY];
+    
+    FMDBQuickCheck(queue2);
+    {
+        [queue2 inDatabase:^(FMDatabase *db2) {
+            FMResultSet *rs1 = [db2 executeQuery:@"SELECT * FROM test"];
+            FMDBQuickCheck(rs1 != nil);
+            [rs1 close];
+            
+            BOOL ok = [db2 executeUpdate:@"insert into easy values (?)", [NSNumber numberWithInt:3]];
+            FMDBQuickCheck(!ok);
+        }];
+        
+        [queue2 close];
+        
+        [queue2 inDatabase:^(FMDatabase *db2) {
+            FMResultSet *rs1 = [db2 executeQuery:@"SELECT * FROM test"];
+            FMDBQuickCheck(rs1 != nil);
+            [rs1 close];
+            
+            BOOL ok = [db2 executeUpdate:@"insert into easy values (?)", [NSNumber numberWithInt:3]];
+            FMDBQuickCheck(!ok);
+        }];
+    }
     
     {
         // You should see pairs of numbers show up in stdout for this stuff:
-        int ops = 16;
+        size_t ops = 16;
         
-        dispatch_queue_t dqueue = dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_HIGH);
+        dispatch_queue_t dqueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         
         dispatch_apply(ops, dqueue, ^(size_t nby) {
             
@@ -726,10 +933,10 @@ int main (int argc, const char * argv[]) {
             if (nby % 2 == 1) {
                 [NSThread sleepForTimeInterval:.1];
                 
-                [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+                [queue inTransaction:^(FMDatabase *adb, BOOL *rollback) {
                     NSLog(@"Starting query  %ld", nby);
                     
-                    FMResultSet *rsl = [db executeQuery:@"select * from qfoo where foo like 'h%'"];
+                    FMResultSet *rsl = [adb executeQuery:@"select * from qfoo where foo like 'h%'"];
                     while ([rsl next]) {
                         ;// whatever.
                     }
@@ -743,33 +950,55 @@ int main (int argc, const char * argv[]) {
                 [NSThread sleepForTimeInterval:.1];
             }
             
-            [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+            [queue inTransaction:^(FMDatabase *adb, BOOL *rollback) {
                 NSLog(@"Starting update %ld", nby);
-                [db executeUpdate:@"insert into qfoo values ('1')"];
-                [db executeUpdate:@"insert into qfoo values ('2')"];
-                [db executeUpdate:@"insert into qfoo values ('3')"];
+                [adb executeUpdate:@"insert into qfoo values ('1')"];
+                [adb executeUpdate:@"insert into qfoo values ('2')"];
+                [adb executeUpdate:@"insert into qfoo values ('3')"];
                 NSLog(@"Ending update   %ld", nby);
             }];
         });
         
         [queue close];
         
-        [queue inDatabase:^(FMDatabase *db) {
-            FMDBQuickCheck([db executeUpdate:@"insert into qfoo values ('1')"]);
+        [queue inDatabase:^(FMDatabase *adb) {
+            FMDBQuickCheck([adb executeUpdate:@"insert into qfoo values ('1')"]);
         }];
     }
     
+    {
+        
+        
+        [queue inDatabase:^(FMDatabase *adb) {
+            [adb executeUpdate:@"create table colNameTest (a, b, c, d)"];
+            FMDBQuickCheck([adb executeUpdate:@"insert into colNameTest values (1, 2, 3, 4)"]);
+            
+            FMResultSet *ars = [adb executeQuery:@"select * from colNameTest"];
+            
+            NSDictionary *d = [ars columnNameToIndexMap];
+            FMDBQuickCheck([d count] == 4);
+            
+            FMDBQuickCheck([[d objectForKey:@"a"] intValue] == 0);
+            FMDBQuickCheck([[d objectForKey:@"b"] intValue] == 1);
+            FMDBQuickCheck([[d objectForKey:@"c"] intValue] == 2);
+            FMDBQuickCheck([[d objectForKey:@"d"] intValue] == 3);
+            
+            [ars close];
+            
+        }];
+        
+    }
     
     
     {
-        [queue inDatabase:^(FMDatabase *db) {
-            [db executeUpdate:@"create table transtest (a integer)"];
-            FMDBQuickCheck([db executeUpdate:@"insert into transtest values (1)"]);
-            FMDBQuickCheck([db executeUpdate:@"insert into transtest values (2)"]);
+        [queue inDatabase:^(FMDatabase *adb) {
+            [adb executeUpdate:@"create table transtest (a integer)"];
+            FMDBQuickCheck([adb executeUpdate:@"insert into transtest values (1)"]);
+            FMDBQuickCheck([adb executeUpdate:@"insert into transtest values (2)"]);
             
             int rowCount = 0;
-            FMResultSet *rs = [db executeQuery:@"select * from transtest"];
-            while ([rs next]) {
+            FMResultSet *ars = [adb executeQuery:@"select * from transtest"];
+            while ([ars next]) {
                 rowCount++;
             }
             
@@ -778,8 +1007,8 @@ int main (int argc, const char * argv[]) {
         
         
         
-        [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
-            FMDBQuickCheck([db executeUpdate:@"insert into transtest values (3)"]);
+        [queue inTransaction:^(FMDatabase *adb, BOOL *rollback) {
+            FMDBQuickCheck([adb executeUpdate:@"insert into transtest values (3)"]);
             
             if (YES) {
                 // uh oh!, something went wrong (not really, this is just a test
@@ -787,18 +1016,18 @@ int main (int argc, const char * argv[]) {
                 return;
             }
             
-            FMDBQuickCheck([db executeUpdate:@"insert into transtest values (4)"]);
+            FMDBQuickCheck([adb executeUpdate:@"insert into transtest values (4)"]);
         }];
         
-        [queue inDatabase:^(FMDatabase *db) {
+        [queue inDatabase:^(FMDatabase *adb) {
         
             int rowCount = 0;
-            FMResultSet *rs = [db executeQuery:@"select * from transtest"];
-            while ([rs next]) {
+            FMResultSet *ars = [adb executeQuery:@"select * from transtest"];
+            while ([ars next]) {
                 rowCount++;
             }
             
-            FMDBQuickCheck(![db hasOpenResultSets]);
+            FMDBQuickCheck(![adb hasOpenResultSets]);
             
             NSLog(@"after rollback, rowCount is %d (should be 2)", rowCount);
             
@@ -808,20 +1037,20 @@ int main (int argc, const char * argv[]) {
     
     // hey, let's make a custom function!
     
-    [queue inDatabase:^(FMDatabase *db) {
+    [queue inDatabase:^(FMDatabase *adb) {
         
-        [db executeUpdate:@"create table ftest (foo text)"];
-        [db executeUpdate:@"insert into ftest values ('hello')"];
-        [db executeUpdate:@"insert into ftest values ('hi')"];
-        [db executeUpdate:@"insert into ftest values ('not h!')"];
-        [db executeUpdate:@"insert into ftest values ('definitely not h!')"];
+        [adb executeUpdate:@"create table ftest (foo text)"];
+        [adb executeUpdate:@"insert into ftest values ('hello')"];
+        [adb executeUpdate:@"insert into ftest values ('hi')"];
+        [adb executeUpdate:@"insert into ftest values ('not h!')"];
+        [adb executeUpdate:@"insert into ftest values ('definitely not h!')"];
         
-        [db makeFunctionNamed:@"StringStartsWithH" maximumArguments:1 withBlock:^(sqlite3_context *context, int argc, sqlite3_value **argv) {
-            if (sqlite3_value_type(argv[0]) == SQLITE_TEXT) {
+        [adb makeFunctionNamed:@"StringStartsWithH" maximumArguments:1 withBlock:^(sqlite3_context *context, int aargc, sqlite3_value **aargv) {
+            if (sqlite3_value_type(aargv[0]) == SQLITE_TEXT) {
                 
                 @autoreleasepool {
                     
-                    const char *c = (const char *)sqlite3_value_text(argv[0]);
+                    const char *c = (const char *)sqlite3_value_text(aargv[0]);
                     
                     NSString *s = [NSString stringWithUTF8String:c];
                     
@@ -829,14 +1058,14 @@ int main (int argc, const char * argv[]) {
                 }
             }
             else {
-                NSLog(@"Unknown formart for StringStartsWithH (%d) %s:%d", sqlite3_value_type(argv[0]), __FUNCTION__, __LINE__);
+                NSLog(@"Unknown formart for StringStartsWithH (%d) %s:%d", sqlite3_value_type(aargv[0]), __FUNCTION__, __LINE__);
                 sqlite3_result_null(context);
             }
         }];
         
         int rowCount = 0;
-        FMResultSet *rs = [db executeQuery:@"select * from ftest where StringStartsWithH(foo)"];
-        while ([rs next]) {
+        FMResultSet *ars = [adb executeQuery:@"select * from ftest where StringStartsWithH(foo)"];
+        while ([ars next]) {
             rowCount++;
             
             NSLog(@"Does %@ start with 'h'?", [rs stringForColumnIndex:0]);
@@ -844,13 +1073,9 @@ int main (int argc, const char * argv[]) {
         }
         FMDBQuickCheck(rowCount == 2);
         
-        
-        
-        
-        
+        testStatementCaching();
         
     }];
-    
     
     NSLog(@"That was version %@ of sqlite", [FMDatabase sqliteLibVersion]);
     
@@ -859,6 +1084,48 @@ int main (int argc, const char * argv[]) {
     
     
     return 0;
+}
+/*
+ Test statement caching
+ This test checks the fixes that address https://github.com/ccgus/fmdb/issues/6
+ */
+
+void testStatementCaching() {
+    
+    FMDatabase *db = [FMDatabase databaseWithPath:nil]; // use in-memory DB
+    [db open];
+    
+    [db executeUpdate:@"DROP TABLE IF EXISTS testStatementCaching"];
+    [db executeUpdate:@"CREATE TABLE testStatementCaching ( value INTEGER )"];
+    [db executeUpdate:@"INSERT INTO testStatementCaching( value ) VALUES (1)"];
+    [db executeUpdate:@"INSERT INTO testStatementCaching( value ) VALUES (1)"];
+    [db executeUpdate:@"INSERT INTO testStatementCaching( value ) VALUES (2)"];
+    
+    [db setShouldCacheStatements:YES];
+    
+    // two iterations.
+    //  the first time through no statements will be from the cache.
+    //  the second time through all statements come from the cache.
+    for (int i = 1; i <= 2; i++ ) {
+        
+        FMResultSet* rs1 = [db executeQuery: @"SELECT rowid, * FROM testStatementCaching WHERE value = ?", @1]; // results in 2 rows...
+        FMDBQuickCheck([rs1 next]);
+        
+        // confirm that we're seeing the benefits of caching.
+        FMDBQuickCheck([[rs1 statement] useCount] == i);
+        
+        FMResultSet* rs2 = [db executeQuery:@"SELECT rowid, * FROM testStatementCaching WHERE value = ?", @2]; // results in 1 row
+        FMDBQuickCheck([rs2 next]);
+        FMDBQuickCheck([[rs2 statement] useCount] == i);
+        
+        // This is the primary check - with the old implementation of statement caching, rs2 would have rejiggered the (cached) statement used by rs1, making this test fail to return the 2nd row in rs1.
+        FMDBQuickCheck([rs1 next]);
+        
+        [rs1 close];
+        [rs2 close];
+    }
+    
+    [db close];
 }
 
 /*
@@ -1028,9 +1295,9 @@ void testPool(NSString *dbPath) {
             FMDBQuickCheck(![adb hadError]);
             [adb executeUpdate:@"insert into easy values (?)", [NSNumber numberWithInt:1009]];
             
-            [adb inSavePoint:^(BOOL *rollback) {
+            [adb inSavePoint:^(BOOL *arollback) {
                 FMDBQuickCheck(([adb executeUpdate:@"insert into easy values (?)", [NSNumber numberWithInt:1010]]));
-                *rollback = YES;
+                *arollback = YES;
             }];
         }];
         
@@ -1081,9 +1348,9 @@ void testPool(NSString *dbPath) {
     
     {
         
-        int ops = 128;
+        size_t ops = 128;
         
-        dispatch_queue_t dqueue = dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_HIGH);
+        dispatch_queue_t dqueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         
         dispatch_apply(ops, dqueue, ^(size_t nby) {
             
@@ -1110,6 +1377,20 @@ void testPool(NSString *dbPath) {
         NSLog(@"Number of open databases after crazy gcd stuff: %ld", [dbPool countOfOpenDatabases]);
     }
     
+    FMDatabasePool *dbPool2 = [FMDatabasePool databasePoolWithPath:dbPath flags:SQLITE_OPEN_READONLY];
+    
+    FMDBQuickCheck(dbPool2);
+    {
+        [dbPool2 inDatabase:^(FMDatabase *db2) {
+            FMResultSet *rs1 = [db2 executeQuery:@"SELECT * FROM test"];
+            FMDBQuickCheck(rs1 != nil);
+            [rs1 close];
+            
+            BOOL ok = [db2 executeUpdate:@"insert into easy values (?)", [NSNumber numberWithInt:3]];
+            FMDBQuickCheck(!ok);
+        }];
+    }
+    
     
     // if you want to see a deadlock, just uncomment this line and run:
     //#define ONLY_USE_THE_POOL_IF_YOU_ARE_DOING_READS_OTHERWISE_YOULL_DEADLOCK_USE_FMDATABASEQUEUE_INSTEAD 1
@@ -1118,7 +1399,7 @@ void testPool(NSString *dbPath) {
         
         int ops = 16;
         
-        dispatch_queue_t dqueue = dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_HIGH);
+        dispatch_queue_t dqueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         
         dispatch_apply(ops, dqueue, ^(size_t nby) {
             
@@ -1161,3 +1442,96 @@ void testPool(NSString *dbPath) {
 #endif
 
 }
+
+
+/*
+ Test the date format
+ */
+
+void testOneDateFormat( FMDatabase *db, NSDate *testDate ) {
+    [db executeUpdate:@"DROP TABLE IF EXISTS test_format"];
+    [db executeUpdate:@"CREATE TABLE test_format ( test TEXT )"];
+    [db executeUpdate:@"INSERT INTO test_format(test) VALUES (?)", testDate];
+    FMResultSet *rs = [db executeQuery:@"SELECT test FROM test_format"];
+    if ([rs next]) {
+        NSDate *found = [rs dateForColumnIndex:0];
+        if (NSOrderedSame != [testDate compare:found]) {
+            NSLog(@"Did not get back what we stored.");
+        }
+    }
+    else {
+        NSLog(@"Insertion borked");
+    }
+    [rs close];
+}
+
+void testDateFormat() {
+    
+    FMDatabase *db = [FMDatabase databaseWithPath:nil]; // use in-memory DB
+    [db open];
+    
+    NSDateFormatter *fmt = [FMDatabase storeableDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    
+    NSDate *testDate = [fmt dateFromString:@"2013-02-20 12:00:00"];
+    
+    // test timestamp dates (ensuring our change does not break those)
+    testOneDateFormat(db,testDate);
+    
+    // now test the string-based timestamp
+    [db setDateFormat:fmt];
+    testOneDateFormat(db, testDate);
+    
+    [db close];
+}
+
+
+/*
+ What is this function for?  Think of it as a template which a developer can use
+ to report bugs.
+ 
+ If you have a bug, make it reproduce in this function and then let the
+ developer(s) know either via the github bug reporter or the mailing list.
+ */
+
+void FMDBReportABugFunction() {
+    
+    NSString *dbPath = @"/tmp/bugreportsample.db";
+    
+    // delete the old db if it exists
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    [fileManager removeItemAtPath:dbPath error:nil];
+    
+    FMDatabaseQueue *queue = [FMDatabaseQueue databaseQueueWithPath:dbPath];
+    
+    [queue inDatabase:^(FMDatabase *db) {
+        
+        /*
+         Change the contents of this block to suit your needs.
+         */
+        
+        BOOL worked = [db executeUpdate:@"create table test (a text, b text, c integer, d double, e double)"];
+        FMDBQuickCheck(worked);
+        
+        
+        worked = [db executeUpdate:@"insert into test values ('a', 'b', 1, 2.2, 2.3)"];
+        FMDBQuickCheck(worked);
+        
+        FMResultSet *rs = [db executeQuery:@"select * from test"];
+        FMDBQuickCheck([rs next]);
+        [rs close];
+        
+    }];
+    
+    
+    [queue close];
+    
+    
+    // uncomment the following line if you don't want to run through all the other tests.
+    //exit(0);
+    
+}
+
+
+
+
+
