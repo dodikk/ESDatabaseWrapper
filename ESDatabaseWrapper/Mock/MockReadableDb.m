@@ -4,11 +4,14 @@
 
 -(id<ESQueriedSet>)select:( NSString* )sql_
 {
+    typedef NSMutableArray* (*QueriesLogMsgSendFunction)( id, SEL );
+    static const QueriesLogMsgSendFunction getQueriesLog = (QueriesLogMsgSendFunction)objc_msgSend;
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
-    NSMutableArray* queriesLog_ = [ self performSelector: @selector(mQueriesLog) ];
+    NSMutableArray* queriesLog_ = getQueriesLog( self, @selector(mQueriesLog) );
 #pragma clang diagnostic pop
-    
+
     [ queriesLog_ addObject: sql_ ];
 
     return nil;
